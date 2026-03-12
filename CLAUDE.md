@@ -6,13 +6,15 @@ Homelab infrastructure repository.
 
 - **Local server** (Ubuntu/Debian): Docker Compose + Traefik, provisioned by Ansible
 - **DigitalOcean**: Mastodon (future migration from Vultr), managed by OpenTofu
-- **DO Spaces**: Backups and Mastodon media storage
+- **Cloudflare R2**: Mastodon media storage
+- **DO Spaces**: Backups (future)
 
 ## Stack
 
 | Layer | Tool | Purpose |
 |-------|------|---------|
-| Infrastructure | OpenTofu | DO Droplet, DNS, Spaces |
+| Infrastructure | OpenTofu | DO Droplet, DNS, Cloudflare R2 |
+| Lint | TFLint | OpenTofu static analysis |
 | Provisioning | Ansible | Server setup, Docker install, service deploy |
 | Services | Docker Compose | Container orchestration |
 | Reverse Proxy | Traefik | Local routing, auto HTTPS |
@@ -20,7 +22,8 @@ Homelab infrastructure repository.
 
 ## Directory Layout
 
-- `tofu/` — OpenTofu configurations (DO resources)
+- `tofu/` — OpenTofu configurations (DO + Cloudflare R2)
+- `tofu/modules/` — Reusable modules (cloudflare-r2, cloudflare-account-token)
 - `ansible/` — Playbooks and roles for server provisioning
 - `docker/local/` — Docker Compose for local services
 - `scripts/` — Utility scripts
@@ -32,7 +35,10 @@ Homelab infrastructure repository.
 cd ansible && ansible-playbook playbooks/site.yml
 
 # OpenTofu
-cd tofu && tofu plan && tofu apply
+cd tofu && tofu init && tofu plan && tofu apply
+
+# TFLint
+cd tofu && tflint --init && tflint
 
 # Docker services
 cd docker/local && docker compose up -d
