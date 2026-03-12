@@ -10,14 +10,7 @@ resource "cloudflare_dns_record" "mastodon_a" {
   ttl     = 1
 }
 
-resource "cloudflare_dns_record" "mastodon_media_cname" {
-  zone_id = var.cloudflare_zone_id
-  name    = "fedi-files"
-  type    = "CNAME"
-  content = "public.r2.dev"
-  proxied = true
-  ttl     = 1
-}
+# fedi-files CNAME is auto-managed by R2 custom domain (module.mastodon_media)
 
 # SES DKIM records for fedi.yutakobayashi.com
 resource "cloudflare_dns_record" "mastodon_dkim_1" {

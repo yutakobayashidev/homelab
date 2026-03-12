@@ -53,6 +53,28 @@ variable "cloudflare_zone_id" {
   default     = null
 }
 
+# AWS
+
+variable "aws_access_key" {
+  description = "AWS アクセスキー ID"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "aws_secret_key" {
+  description = "AWS シークレットアクセスキー"
+  type        = string
+  sensitive   = true
+  default     = ""
+}
+
+variable "aws_region" {
+  description = "AWS リージョン"
+  type        = string
+  default     = "ap-northeast-1"
+}
+
 # Mastodon
 
 variable "mastodon_ip" {
