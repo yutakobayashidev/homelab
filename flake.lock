@@ -1,6 +1,147 @@
 {
   "nodes": {
+    "agent-skills-nix": {
+      "inputs": {
+        "home-manager": "home-manager",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1772640663,
+        "narHash": "sha256-apWnei/2LGgJ247h4WpPQsGooWot4I3CX2PzPsXGx3A=",
+        "owner": "Kyure-A",
+        "repo": "agent-skills-nix",
+        "rev": "0e74b9e4b998807c21ab7ac49d00074aee5df96c",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Kyure-A",
+        "repo": "agent-skills-nix",
+        "type": "github"
+      }
+    },
+    "cloudflare-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1772551851,
+        "narHash": "sha256-QUhPWw8VdqUwn0cT8GZeEBY7+iXr16dYQu1FGRw08Po=",
+        "owner": "cloudflare",
+        "repo": "skills",
+        "rev": "d3113039790f64e052ff80f351190da65e9b7510",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cloudflare",
+        "repo": "skills",
+        "type": "github"
+      }
+    },
+    "flake-parts": {
+      "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib"
+      },
+      "locked": {
+        "lastModified": 1772408722,
+        "narHash": "sha256-rHuJtdcOjK7rAHpHphUb1iCvgkU3GpfvicLMwwnfMT0=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "f20dc5d9b8027381c474144ecabc9034d6a839a3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "hashicorp-agent-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1772625576,
+        "narHash": "sha256-gtXcigFYy5xMEBMgTa0pQjmwXfO0uHCLb0ybT22r5xM=",
+        "owner": "hashicorp",
+        "repo": "agent-skills",
+        "rev": "876a095c71079e4c112fb1de2f1a66dca0ffea23",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hashicorp",
+        "repo": "agent-skills",
+        "type": "github"
+      }
+    },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "agent-skills-nix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1772380461,
+        "narHash": "sha256-O3ukj3Bb3V0Tiy/4LUfLlBpWypJ9P0JeUgsKl2nmZZY=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "f140aa04d7d14f8a50ab27f3691b5766b17ae961",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "mcp-servers-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1773341271,
+        "narHash": "sha256-Uj5n0sCdBh6gR1WVRYh/1uFMMkGBoGMp/Ky4iwMDIA8=",
+        "owner": "natsukium",
+        "repo": "mcp-servers-nix",
+        "rev": "a69c3f609d719bcafadebf7954f4c546d97ad155",
+        "type": "github"
+      },
+      "original": {
+        "owner": "natsukium",
+        "repo": "mcp-servers-nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
+      "locked": {
+        "lastModified": 1772198003,
+        "narHash": "sha256-I45esRSssFtJ8p/gLHUZ1OUaaTaVLluNkABkk6arQwE=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "dd9b079222d43e1943b6ebd802f04fd959dc8e61",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-lib": {
+      "locked": {
+        "lastModified": 1772328832,
+        "narHash": "sha256-e+/T/pmEkLP6BHhYjx6GmwP5ivonQQn0bJdH9YrRB+Q=",
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "rev": "c185c7a5e5dd8f9add5b2f8ebeff00888b070742",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
       "locked": {
         "lastModified": 1773122722,
         "narHash": "sha256-FIqHByVqxCprNjor1NqF80F2QQoiiyqanNNefdlvOg4=",
@@ -16,7 +157,12 @@
     },
     "root": {
       "inputs": {
-        "nixpkgs": "nixpkgs"
+        "agent-skills-nix": "agent-skills-nix",
+        "cloudflare-skills": "cloudflare-skills",
+        "flake-parts": "flake-parts",
+        "hashicorp-agent-skills": "hashicorp-agent-skills",
+        "mcp-servers-nix": "mcp-servers-nix",
+        "nixpkgs": "nixpkgs_2"
       }
     }
   },
