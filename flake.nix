@@ -19,10 +19,14 @@
       url = "github:hashicorp/agent-skills";
       flake = false;
     };
+    aws-agent-skills = {
+      url = "github:itsmostafa/aws-agent-skills";
+      flake = false;
+    };
   };
 
   outputs =
-    { flake-parts, mcp-servers-nix, agent-skills-nix, cloudflare-skills, hashicorp-agent-skills, ... }@inputs:
+    { flake-parts, mcp-servers-nix, agent-skills-nix, cloudflare-skills, hashicorp-agent-skills, aws-agent-skills, ... }@inputs:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ mcp-servers-nix.flakeModule ];
 
@@ -44,6 +48,9 @@
             };
             hashicorp = {
               path = hashicorp-agent-skills;
+            };
+            aws = {
+              path = aws-agent-skills;
             };
           };
 

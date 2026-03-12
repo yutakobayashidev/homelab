@@ -19,6 +19,22 @@
         "type": "github"
       }
     },
+    "aws-agent-skills": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1773345336,
+        "narHash": "sha256-N9oEIb5JaD2unn+Mz95IhlNIjobvz92McGqXN3NlIOg=",
+        "owner": "itsmostafa",
+        "repo": "aws-agent-skills",
+        "rev": "d1d3bbaf1ff4447c446fe611b4e383fc91bbae8a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "itsmostafa",
+        "repo": "aws-agent-skills",
+        "type": "github"
+      }
+    },
     "cloudflare-skills": {
       "flake": false,
       "locked": {
@@ -158,6 +174,7 @@
     "root": {
       "inputs": {
         "agent-skills-nix": "agent-skills-nix",
+        "aws-agent-skills": "aws-agent-skills",
         "cloudflare-skills": "cloudflare-skills",
         "flake-parts": "flake-parts",
         "hashicorp-agent-skills": "hashicorp-agent-skills",
