@@ -2,18 +2,21 @@ variable "do_token" {
   description = "DigitalOcean API token"
   type        = string
   sensitive   = true
+  default     = ""
 }
 
 variable "spaces_access_id" {
   description = "DO Spaces access key ID"
   type        = string
   sensitive   = true
+  default     = ""
 }
 
 variable "spaces_secret_key" {
   description = "DO Spaces secret key"
   type        = string
   sensitive   = true
+  default     = ""
 }
 
 variable "domain" {
@@ -50,12 +53,20 @@ variable "cloudflare_zone_id" {
   default     = null
 }
 
+# Mastodon
+
+variable "mastodon_ip" {
+  description = "Mastodon サーバーの IP アドレス（現在は Vultr、移行後は DO Droplet）"
+  type        = string
+  default     = "45.76.97.101" # Vultr IP
+}
+
 # Mastodon R2
 
 variable "mastodon_media_bucket_name" {
   description = "Mastodon メディア用 R2 バケット名"
   type        = string
-  default     = "mastodon-media"
+  default     = "fediverse"
 }
 
 variable "mastodon_media_custom_domain" {
