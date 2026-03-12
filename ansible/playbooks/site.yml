@@ -1,0 +1,5 @@
+- name: Full server provisioning
+  ansible.builtin.import_playbook: common.yml
+
+- name: Docker and services
+  ansible.builtin.import_playbook: docker.yml

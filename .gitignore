@@ -1,0 +1,26 @@
+# OpenTofu
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+terraform.tfvars
+crash.log
+
+# Environment
+.env
+*.pem
+*.key
+
+# OS
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+
+# Backups
+*.bak
+*.dump
+
+# AI
+z-ai/

@@ -1,0 +1,27 @@
+- name: Docker setup and service deployment
+  hosts: local
+  become: true
+  roles:
+    - docker
+  tasks:
+    - name: Create compose directory
+      ansible.builtin.file:
+        path: /opt/homelab
+        state: directory
+        owner: deploy
+        group: deploy
+        mode: "0755"
+
+    - name: Copy compose files
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/../../docker/local/"
+        dest: /opt/homelab/
+        owner: deploy
+        group: deploy
+        mode: "0644"
+
+    - name: Start services
+      community.docker.docker_compose_v2:
+        project_src: /opt/homelab
+        state: present
+      become_user: deploy

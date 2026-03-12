@@ -1,0 +1,5 @@
+do_token          = "dop_v1_xxx"
+spaces_access_id  = "xxx"
+spaces_secret_key = "xxx"
+domain            = "example.com"
+region            = "sgp1"
