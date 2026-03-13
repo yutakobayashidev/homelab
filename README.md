@@ -178,6 +178,12 @@ docker/local/                      # Local services
 ## Future
 
 - Mastodon migration from Vultr to DigitalOcean
+- Self-hosted services
+  - Home Assistant
+  - Nextcloud
+  - AdGuard Home
+  - xnotif (X/Twitter notification relay)
+  - OpenClaw
 - Observability
   - Grafana + Prometheus monitoring stack
   - Claude Code OpenTelemetry → Grafana
