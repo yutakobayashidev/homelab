@@ -61,6 +61,14 @@ module "mastodon_r2_token" {
   cloudflare_account_id = var.cloudflare_account_id
 }
 
+# Cloudflare R2 - Obsidian backup
+module "obsidian_r2" {
+  source                = "./modules/cloudflare-r2"
+  cloudflare_account_id = var.cloudflare_account_id
+  r2_location           = "APAC"
+  bucket_name           = "obsidian"
+}
+
 # TODO: Add resources when migrating Mastodon from Vultr
 # - digitalocean_droplet (Mastodon)
 # - digitalocean_domain + records (DNS)
