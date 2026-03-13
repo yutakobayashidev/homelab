@@ -69,6 +69,16 @@ module "obsidian_r2" {
   bucket_name           = "obsidian"
 }
 
+# Cloudflare R2 Access Token - Obsidian
+module "obsidian_r2_token" {
+  source                = "./modules/cloudflare-account-token"
+  project_name          = "homelab"
+  environment           = "prod"
+  token_name            = "obsidian-r2"
+  bucket_name           = module.obsidian_r2.bucket_name
+  cloudflare_account_id = var.cloudflare_account_id
+}
+
 # TODO: Add resources when migrating Mastodon from Vultr
 # - digitalocean_droplet (Mastodon)
 # - digitalocean_domain + records (DNS)

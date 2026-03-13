@@ -20,6 +20,18 @@ output "mastodon_r2_bucket_name" {
   value       = module.mastodon_media.bucket_name
 }
 
+# Obsidian R2
+output "obsidian_r2_access_key_id" {
+  description = "Obsidian 用 R2 アクセスキー ID"
+  value       = module.obsidian_r2_token.access_key_id
+}
+
+output "obsidian_r2_secret_access_key" {
+  description = "Obsidian 用 R2 シークレットアクセスキー"
+  value       = module.obsidian_r2_token.secret_access_key
+  sensitive   = true
+}
+
 # TODO: Add outputs when Mastodon Droplet is created
 # output "mastodon_ip" {
 #   description = "Mastodon Droplet public IP"
