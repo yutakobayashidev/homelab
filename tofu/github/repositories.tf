@@ -12,7 +12,7 @@ resource "github_repository" "homelab" {
   allow_squash_merge = true
   allow_rebase_merge = true
 
-  delete_branch_on_merge = false
+  delete_branch_on_merge = true
 }
 
 resource "github_repository" "dotnix" {
@@ -63,7 +63,7 @@ resource "github_repository" "ava" {
   allow_squash_merge = true
   allow_rebase_merge = true
 
-  delete_branch_on_merge = false
+  delete_branch_on_merge = true
 }
 
 resource "github_repository_topics" "repiq" {
