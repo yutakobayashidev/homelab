@@ -189,6 +189,7 @@ docker/local/                      # Local services
   - AdGuard Home
   - xnotif (X/Twitter notification relay)
   - OpenClaw
+  - KonomiTV
 - Observability
   - Claude Code OpenTelemetry → Grafana
   - Prometheus metrics collection
