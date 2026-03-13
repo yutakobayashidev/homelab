@@ -2,7 +2,8 @@
 
 resource "tfe_workspace" "homelab" {
   name         = "homelab"
-  organization = "yutakobayashi"
+  organization = tfe_organization.this.name
+  project_id   = tfe_project.default.id
   description  = "Homelab infrastructure (DO, Cloudflare, AWS)"
 
   file_triggers_enabled = false
