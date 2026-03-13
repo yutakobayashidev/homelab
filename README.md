@@ -178,5 +178,9 @@ docker/local/                      # Local services
 ## Future
 
 - Mastodon migration from Vultr to DigitalOcean
-- Monitoring stack (Grafana + Prometheus)
+- Observability
+  - Grafana + Prometheus monitoring stack
+  - Claude Code OpenTelemetry → Grafana
+  - Oura Ring metrics (daily_readiness, daily_spo2, daily_sleep)
+  - sFlow / RIPE Atlas network monitoring
 - microk8s for learning Kubernetes
