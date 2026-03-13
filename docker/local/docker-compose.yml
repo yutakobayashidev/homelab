@@ -22,19 +22,52 @@ services:
     networks:
       - proxy
 
-  # Add services below. Example:
-  # whoami:
-  #   image: traefik/whoami
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN}`)"
-  #     - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
-  #   networks:
-  #     - proxy
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: grafana
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.${DOMAIN}`)"
+      - "traefik.http.routers.grafana.tls.certresolver=letsencrypt"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+    networks:
+      - proxy
+      - monitoring
+
+  loki:
+    image: grafana/loki:3.4.1
+    container_name: loki
+    restart: unless-stopped
+    user: root
+    entrypoint: /bin/sh
+    command: -c "mkdir -p /var/lib/loki && chown -R 10001:10001 /var/lib/loki && /usr/bin/loki -config.file=/etc/loki/config.yaml"
+    volumes:
+      - ./loki/config.yaml:/etc/loki/config.yaml:ro
+      - loki-data:/var/lib/loki
+    networks:
+      - monitoring
+
+  promtail:
+    image: grafana/promtail:3.4.1
+    container_name: promtail
+    restart: unless-stopped
+    volumes:
+      - ./promtail/config.yaml:/etc/promtail/config.yaml:ro
+      - /var/log:/var/log:ro
+    command: -config.file=/etc/promtail/config.yaml
+    networks:
+      - monitoring
 
 volumes:
   traefik-certs:
+  grafana-data:
+  loki-data:
 
 networks:
   proxy:
     name: proxy
+  monitoring:
+    name: monitoring

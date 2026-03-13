@@ -160,8 +160,11 @@ ansible/                           # Server provisioning
     └── docker/                    # Docker CE install
 
 docker/local/                      # Local services
-├── docker-compose.yml             # Traefik + services
-└── traefik/traefik.yml
+├── docker-compose.yml             # Traefik, Grafana, Loki, Promtail
+├── traefik/traefik.yml
+├── loki/config.yaml               # Loki log aggregation
+├── promtail/config.yaml           # Log collector → Loki
+└── scripts/oura-exporter.sh       # Oura Ring → Loki exporter
 ```
 
 ## Managed Resources
@@ -187,8 +190,8 @@ docker/local/                      # Local services
   - xnotif (X/Twitter notification relay)
   - OpenClaw
 - Observability
-  - Grafana + Prometheus monitoring stack
   - Claude Code OpenTelemetry → Grafana
+  - Prometheus metrics collection
   - Oura Ring metrics (daily_readiness, daily_spo2, daily_sleep)
   - sFlow / RIPE Atlas network monitoring
 - microk8s for learning Kubernetes
