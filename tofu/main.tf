@@ -1,6 +1,14 @@
 terraform {
   required_version = ">= 1.6"
 
+  cloud {
+    hostname     = "app.terraform.io"
+    organization = "yutakobayashi"
+    workspaces {
+      name = "homelab"
+    }
+  }
+
   required_providers {
     digitalocean = {
       source  = "digitalocean/digitalocean"
@@ -15,20 +23,6 @@ terraform {
       version = "~> 5.0"
     }
   }
-
-  # Uncomment after bootstrapping the Spaces bucket
-  # backend "s3" {
-  #   endpoints = {
-  #     s3 = "https://sgp1.digitaloceanspaces.com"
-  #   }
-  #   bucket                      = "homelab-tfstate"
-  #   key                         = "terraform.tfstate"
-  #   region                      = "us-east-1" # required but ignored by DO
-  #   skip_credentials_validation = true
-  #   skip_requesting_account_id  = true
-  #   skip_metadata_api_check     = true
-  #   skip_s3_checksum            = true
-  # }
 }
 
 provider "digitalocean" {
