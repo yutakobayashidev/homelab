@@ -14,12 +14,22 @@ DigitalOcean (future)
 └── Spaces (backups)
 
 Cloudflare
-└── R2 (Mastodon media storage)
+├── DNS (yutakobayashi.com)
+├── R2 (Mastodon media / Obsidian backup)
+└── API Tokens
+
+AWS
+└── SES (Mastodon email delivery)
+
+HCP Terraform
+├── tfe workspace (HCP Terraform self-management)
+├── homelab workspace (infrastructure state)
+└── github workspace (GitHub repository settings)
 
 Management
-├── Ansible  → server provisioning
-├── OpenTofu → cloud infrastructure
-└── GitHub Actions → CI/CD
+├── Ansible    → server provisioning
+├── OpenTofu   → cloud infrastructure
+└── Nix flake  → dev environment
 ```
 
 ## Prerequisites
@@ -27,7 +37,7 @@ Management
 - [Nix](https://nixos.org/) (recommended) or install manually:
   - [OpenTofu](https://opentofu.org/) >= 1.6
   - [Ansible](https://docs.ansible.com/) >= 2.15
-  - [TFLint](https://github.com/terraform-linters/tflint) >= 0.58.1
+  - [TFLint](https://github.com/terraform-linters/tflint)
 - [Docker](https://www.docker.com/) and Docker Compose
 
 ## Setup
@@ -35,122 +45,138 @@ Management
 ### 1. Development Environment
 
 ```bash
-# Nix flake で開発ツールを一括インストール (opentofu, ansible, tflint, docker-compose)
+# Install all dev tools via Nix flake
 nix develop
 
-# または direnv を使う場合
-direnv allow
+# MCP servers and agent skills are auto-configured via shellHook
 ```
 
-### 2. OpenTofu
+### 2. HCP Terraform
+
+State is managed by [HCP Terraform](https://app.terraform.io/). Authenticate once:
 
 ```bash
-cd tofu
+tofu login app.terraform.io
+```
 
-# 変数ファイルを作成
+### 3. OpenTofu
+
+Three independent workspaces:
+
+| Directory | Workspace | Manages |
+|-----------|-----------|---------|
+| `tofu/` | homelab | Cloudflare DNS/R2, AWS SES, DO |
+| `tofu/tfe/` | tfe | HCP Terraform organization, workspaces |
+| `tofu/github/` | github | GitHub repository settings |
+
+```bash
+cd tofu  # or tofu/tfe, tofu/github
+
+# Create and edit variables file
 cp terraform.tfvars.example terraform.tfvars
-# terraform.tfvars を編集して実際の値を設定
 
-# 初期化
+# Init, plan, apply
 tofu init
-
-# Lint
-tflint --init
-tflint
-
-# 差分確認
 tofu plan
-
-# 適用
 tofu apply
-
-# 出力値の確認
-tofu output
 ```
 
-#### Required Secrets
+#### Required Secrets (`tofu/terraform.tfvars`)
 
-| 変数 | 説明 |
-|------|------|
-| `do_token` | DigitalOcean API トークン |
-| `spaces_access_id` | DO Spaces アクセスキー ID |
-| `spaces_secret_key` | DO Spaces シークレットキー |
-| `domain` | ルートドメイン名 |
-| `cloudflare_api_token` | Cloudflare API トークン |
-| `cloudflare_account_id` | Cloudflare アカウント ID |
+| Variable | Description |
+|----------|-------------|
+| `cloudflare_api_token` | Cloudflare API token (Zone:DNS:Edit, Zone:Zone:Read) |
+| `cloudflare_account_id` | Cloudflare account ID |
 | `cloudflare_zone_id` | Cloudflare Zone ID |
+| `aws_access_key` | AWS access key (for SES) |
+| `aws_secret_key` | AWS secret key |
+| `aws_region` | AWS region (ap-northeast-1) |
+| `domain` | Root domain name |
+| `do_token` | DigitalOcean API token |
 
-#### GitHub Actions
+#### Required Secrets (`tofu/github/terraform.tfvars`)
 
-PR で `tflint` + `tofu plan`、main マージで `tofu apply` が自動実行される。
+| Variable | Description |
+|----------|-------------|
+| `github_token` | GitHub Personal Access Token |
 
-以下の GitHub Secrets を設定すること:
-
-- `DO_TOKEN`
-- `SPACES_ACCESS_ID`
-- `SPACES_SECRET_KEY`
-- `DOMAIN`
-- `CLOUDFLARE_API_TOKEN`
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_ZONE_ID`
-
-### 3. Local Server
+### 4. Local Server
 
 ```bash
-# Ansible inventory を編集 (サーバー IP を設定)
+# Edit Ansible inventory
 vim ansible/inventory/hosts.yml
 
-# サーバーをプロビジョニング (Docker インストール, ファイアウォール設定等)
-cd ansible
-ansible-playbook playbooks/site.yml
+# Provision server
+cd ansible && ansible-playbook playbooks/site.yml
 
-# または Docker Compose で直接デプロイ
-cd docker/local
-cp .env.example .env  # 編集して値を設定
-docker compose up -d
+# Or deploy directly with Docker Compose
+cd docker/local && docker compose up -d
 ```
 
 ## Adding a New Service
 
-1. `docker/local/docker-compose.yml` にサービスを追加
-2. Traefik labels でルーティング設定:
+1. Add service to `docker/local/docker-compose.yml`
+2. Configure routing with Traefik labels:
    ```yaml
    labels:
      - "traefik.enable=true"
      - "traefik.http.routers.myservice.rule=Host(`myservice.example.com`)"
      - "traefik.http.routers.myservice.tls.certresolver=letsencrypt"
    ```
-3. デプロイ: `ansible-playbook playbooks/docker.yml` or `docker compose up -d`
+3. Deploy: `ansible-playbook playbooks/docker.yml` or `docker compose up -d`
 
 ## Directory Structure
 
 ```
-tofu/                          # OpenTofu (cloud infrastructure)
-├── main.tf                    # providers + module calls
-├── variables.tf
-├── outputs.tf
-├── .tflint.hcl                # TFLint rules
-└── modules/
-    ├── cloudflare-r2/         # R2 bucket + custom domain
-    └── cloudflare-account-token/  # R2 API token
+tofu/                              # OpenTofu - infrastructure
+├── main.tf                        # providers, R2 buckets, tokens
+├── dns.tf                         # Cloudflare DNS records
+├── ses.tf                         # AWS SES (email)
+├── variables.tf / outputs.tf
+├── .tflint.hcl
+├── modules/
+│   ├── cloudflare-r2/             # R2 bucket + custom domain
+│   └── cloudflare-account-token/  # R2 API token
+├── tfe/                           # HCP Terraform self-management
+│   ├── main.tf                    # tfe provider
+│   ├── organization.tf            # org settings (2FA mandatory)
+│   ├── projects.tf
+│   └── workspaces.tf              # homelab, github workspaces
+└── github/                        # GitHub repository management
+    ├── main.tf                    # github provider
+    ├── variables.tf
+    └── repositories.tf            # repo settings, topics
 
-ansible/                       # Server provisioning
+ansible/                           # Server provisioning
 ├── inventory/hosts.yml
 ├── playbooks/
-│   ├── site.yml               # Full provisioning
-│   ├── common.yml             # Base setup (UFW, fail2ban)
-│   └── docker.yml             # Docker + service deploy
+│   ├── site.yml                   # Full provisioning
+│   ├── common.yml                 # Base setup (UFW, fail2ban)
+│   └── docker.yml                 # Docker + service deploy
 └── roles/
-    ├── base/                  # OS hardening
-    └── docker/                # Docker CE install
+    ├── base/                      # OS hardening
+    └── docker/                    # Docker CE install
 
-docker/local/                  # Local services
-├── docker-compose.yml         # Traefik + services
-└── traefik/traefik.yml        # Traefik config
+docker/local/                      # Local services
+├── docker-compose.yml             # Traefik + services
+└── traefik/traefik.yml
 ```
+
+## Managed Resources
+
+| Provider | Resource | Details |
+|----------|----------|---------|
+| Cloudflare | DNS records | fedi.yutakobayashi.com (A), SES DKIM (CNAME x3) |
+| Cloudflare | R2 buckets | fediverse (Mastodon media), obsidian (backup) |
+| Cloudflare | R2 tokens | mastodon-r2, obsidian-r2 |
+| Cloudflare | R2 custom domain | fedi-files.yutakobayashi.com |
+| AWS | SES | fedi.yutakobayashi.com (domain identity + DKIM) |
+| HCP Terraform | Organization | yutakobayashi (2FA mandatory) |
+| HCP Terraform | Workspaces | tfe, homelab, github |
+| GitHub | Repositories | homelab, dotnix, repiq, ava |
 
 ## Future
 
-- microk8s migration for learning Kubernetes
-- Monitoring stack (Grafana + Prometheus)
 - Mastodon migration from Vultr to DigitalOcean
+- Monitoring stack (Grafana + Prometheus)
+- microk8s for learning Kubernetes
