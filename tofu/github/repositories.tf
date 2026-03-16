@@ -66,6 +66,23 @@ resource "github_repository" "ava" {
   delete_branch_on_merge = true
 }
 
+resource "github_repository" "kaikei" {
+  name        = "kaikei"
+  description = "確定申告・請求書管理"
+  visibility  = "private"
+
+  has_issues    = true
+  has_projects  = false
+  has_wiki      = false
+  has_downloads = true
+
+  allow_merge_commit = true
+  allow_squash_merge = true
+  allow_rebase_merge = true
+
+  delete_branch_on_merge = true
+}
+
 resource "github_repository_topics" "repiq" {
   repository = github_repository.repiq.name
   topics     = ["agent-skills", "cli", "crates-io", "github", "go", "npm", "pypi", "oss-metrics"]
