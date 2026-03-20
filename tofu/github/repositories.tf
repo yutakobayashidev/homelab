@@ -83,6 +83,22 @@ resource "github_repository" "kaikei" {
   delete_branch_on_merge = true
 }
 
+resource "github_repository" "talks" {
+  name       = "talks"
+  visibility = "public"
+
+  has_issues    = true
+  has_projects  = true
+  has_wiki      = true
+  has_downloads = true
+
+  allow_merge_commit = true
+  allow_squash_merge = true
+  allow_rebase_merge = true
+
+  delete_branch_on_merge = true
+}
+
 resource "github_repository_topics" "repiq" {
   repository = github_repository.repiq.name
   topics     = ["agent-skills", "cli", "crates-io", "github", "go", "npm", "pypi", "oss-metrics"]
