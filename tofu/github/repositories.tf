@@ -99,6 +99,26 @@ resource "github_repository" "talks" {
   delete_branch_on_merge = true
 }
 
+resource "github_repository" "google_apps_script" {
+  name        = "google-apps-script"
+  description = "Code-managed Google Apps Script monorepo using pnpm, clasp, and TypeScript"
+  visibility  = "public"
+
+  has_issues    = true
+  has_projects  = true
+  has_wiki      = true
+  has_downloads = true
+
+  allow_merge_commit = true
+  allow_squash_merge = true
+  allow_rebase_merge = true
+
+  delete_branch_on_merge = true
+
+  license_template   = "mit"
+  gitignore_template = "Node"
+}
+
 resource "github_repository_topics" "repiq" {
   repository = github_repository.repiq.name
   topics     = ["agent-skills", "cli", "crates-io", "github", "go", "npm", "pypi", "oss-metrics"]
