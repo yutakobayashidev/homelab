@@ -26,5 +26,8 @@ crash.log
 .mcp.json
 .claude/skills/
 
+# Pre-commit
+.pre-commit-config.yaml
+
 # AI
 z-ai/
